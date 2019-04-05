@@ -1,0 +1,36 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.20.RELEASE'
+	}
+}
+
+plugins {
+	id 'java'
+}
+
+apply plugin: 'org.springframework.boot'
+
+group = 'org.communis'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	all*.exclude module: 'spring-boot-starter-logging'
+	providedRuntime
+}
+
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.springframework.boot:spring-boot-starter'
+	compile 'org.springframework.boot:spring-boot-starter-log4j2:1.5.15.RELEASE'
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+	compile 'org.projectlombok:lombok:1.18.4'
+	compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
+}
