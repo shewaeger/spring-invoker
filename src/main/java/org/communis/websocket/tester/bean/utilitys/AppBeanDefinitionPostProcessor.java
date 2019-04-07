@@ -1,0 +1,59 @@
+package org.communis.websocket.tester.bean.utilitys;
+
+import lombok.extern.log4j.Log4j2;
+import org.communis.websocket.tester.annotations.WSController;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.PropertyValues;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
+import org.springframework.cglib.proxy.Callback;
+import org.springframework.cglib.proxy.Enhancer;
+import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.stereotype.Component;
+
+import java.beans.PropertyDescriptor;
+import java.util.Arrays;
+
+@Log4j2
+@Component
+public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPostProcessor {
+
+    @Autowired
+
+
+    @Override
+    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+        Class<?>[] interfaces = beanClass.getInterfaces();
+        if(!Arrays.asList(interfaces).contains(WSController.class))
+            return null;
+
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(beanClass);
+        enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> {
+            log.info("method called for {}", obj.getClass().getName());
+            return null;
+
+        });
+        return enhancer.create();
+    }
+
+    @Override
+    public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
+        return true;
+    }
+
+    @Override
+    public PropertyValues postProcessPropertyValues(PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeansException {
+        return pvs;
+    }
+
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
+}

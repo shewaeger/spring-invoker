@@ -1,9 +1,10 @@
-package org.communis.websocket.tester.dto;
+package org.communis.websocket.tester.temp.entity;
+
 
 import lombok.Data;
 
 @Data
 public class BrigadeWrapper {
-    String name;
     Long id;
+    String name;
 }
