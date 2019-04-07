@@ -2,6 +2,7 @@ package org.communis.websocket.tester.bean.utilitys;
 
 import lombok.extern.log4j.Log4j2;
 import org.communis.websocket.tester.annotations.WSController;
+import org.communis.websocket.tester.annotations.WSSendTo;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.config.InstantiationAwareBeanPostProces
 import org.springframework.cglib.proxy.Callback;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.beans.PropertyDescriptor;
@@ -19,7 +21,7 @@ import java.util.Arrays;
 public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPostProcessor {
 
     @Autowired
-
+    SimpMessagingTemplate messagingTemplate;
 
     @Override
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
@@ -30,7 +32,8 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(beanClass);
         enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> {
-            log.info("method called for {}", obj.getClass().getName());
+            String channel = method.getAnnotation(WSSendTo.class).value();
+            messagingTemplate.convertAndSend(channel, args);
             return null;
 
         });
