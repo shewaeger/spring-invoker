@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.communis.websocket.tester.annotations.WSController;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
@@ -24,15 +25,14 @@ public class AppImportBeanDefinitionRegistrar implements ImportBeanDefinitionReg
         int pkgNameEnd = className.lastIndexOf(".");
         String pkgName = className.substring(0, pkgNameEnd);
 
-        Reflections reflections = new Reflections(pkgName, new SubTypesScanner());
-        Set<Class<? extends WSController>> controllers = reflections.getSubTypesOf(WSController.class);
+        Reflections reflections = new Reflections(pkgName,new TypeAnnotationsScanner(), new SubTypesScanner());
+        Set<Class<?>> controllers = reflections.getTypesAnnotatedWith(WSController.class);
 
-        for (Class<? extends WSController> controller : controllers) {
-
+        for (Class<?> controller : controllers) {
             if (!controller.isInterface())
                 continue;
-
             log.info("Found WSControllers {}", controller.getName());
+
             GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition();
             genericBeanDefinition.setBeanClass(controller);
             registry.registerBeanDefinition(controller.getName(), genericBeanDefinition);

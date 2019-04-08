@@ -9,14 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ReflectionUtils;
 
 import java.beans.PropertyDescriptor;
-import java.util.Arrays;
 
 @Log4j2
 @Component
@@ -24,12 +21,11 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
 
     @Lazy
     @Autowired
-    SimpMessagingTemplate messagingTemplate;
+    private SimpMessagingTemplate messagingTemplate;
 
     @Override
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
-        Class<?>[] interfaces = beanClass.getInterfaces();
-        if (!Arrays.asList(interfaces).contains(WSController.class))
+        if(!beanClass.isAnnotationPresent(WSController.class))
             return null;
 
         Enhancer enhancer = new Enhancer();
