@@ -32,7 +32,7 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
 
 
 
-    List<Class<?>> foundBeans = new ArrayList<>();
+   Map<Class<?>, String> foundBeans = new HashMap<>();
 
     @Override
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
@@ -54,7 +54,7 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
             return null;
 
         });
-        foundBeans.add(beanClass);
+        foundBeans.put(beanClass, beanName);
         return enhancer.create();
     }
 
