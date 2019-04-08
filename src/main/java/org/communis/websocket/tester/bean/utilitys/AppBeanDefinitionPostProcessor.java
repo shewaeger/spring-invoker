@@ -5,15 +5,9 @@ import org.communis.websocket.tester.annotations.WSController;
 import org.communis.websocket.tester.annotations.WSSendTo;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
-import org.springframework.cglib.proxy.Callback;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
-import org.springframework.context.ApplicationContext;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.beans.PropertyDescriptor;
@@ -23,19 +17,17 @@ import java.util.Arrays;
 @Component
 public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPostProcessor {
 
-    @Autowired
-    ApplicationContext applicationContext;
-
     @Override
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
         Class<?>[] interfaces = beanClass.getInterfaces();
-        if(!Arrays.asList(interfaces).contains(WSController.class))
+        if (!Arrays.asList(interfaces).contains(WSController.class))
             return null;
 
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(beanClass);
         enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> {
-//            String channel = method.getAnnotation(WSSendTo.class).value();
+            String channel = method.getAnnotation(WSSendTo.class).value();
+            log.info("Sending message for channel {}", channel);
             return null;
 
         });
@@ -44,21 +36,6 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
 
     @Override
     public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
-        Class<?> beanClass = bean.getClass();
-        Class<?>[] interfaces = beanClass.getInterfaces();
-//        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();
-//        String[] clone = beanDefinitionNames.clone();
-        if(!Arrays.asList(interfaces).contains(WSController.class))
-            return false;
-
-        Enhancer enhancer = new Enhancer();
-        enhancer.setSuperclass(beanClass);
-
-        enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy)->{
-            String channel = method.getAnnotation(WSSendTo.class).value();
-            //messagingTemplate.convertAndSend(channel, args);
-            return null;
-        });
         return true;
 
     }

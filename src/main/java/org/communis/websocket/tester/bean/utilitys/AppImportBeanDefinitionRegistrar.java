@@ -29,7 +29,7 @@ public class AppImportBeanDefinitionRegistrar implements ImportBeanDefinitionReg
 
         for (Class<? extends WSController> controller : controllers) {
 
-            if(!controller.isInterface())
+            if (!controller.isInterface())
                 continue;
 
             log.info("Found WSControllers {}", controller.getName());
