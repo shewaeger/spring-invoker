@@ -29,7 +29,8 @@ repositories {
 
 dependencies {
 	compile 'org.springframework.boot:spring-boot-starter'
-	compile 'org.springframework.boot:spring-boot-starter-log4j2:1.5.15.RELEASE'
+	compile 'org.springframework.boot:spring-boot-starter-log4j2'
+	compile 'org.springframework.boot:spring-boot-starter-web'
 	compile 'org.projectlombok:lombok:1.18.4'
 	compile 'org.springframework:spring-websocket'
 	compile 'org.springframework:spring-messaging'

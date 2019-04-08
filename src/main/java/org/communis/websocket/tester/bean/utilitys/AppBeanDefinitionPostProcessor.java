@@ -5,10 +5,15 @@ import org.communis.websocket.tester.annotations.WSController;
 import org.communis.websocket.tester.annotations.WSSendTo;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 
 import java.beans.PropertyDescriptor;
 import java.util.Arrays;
@@ -16,6 +21,10 @@ import java.util.Arrays;
 @Log4j2
 @Component
 public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPostProcessor {
+
+    @Lazy
+    @Autowired
+    SimpMessagingTemplate messagingTemplate;
 
     @Override
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
@@ -25,12 +34,14 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
 
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(beanClass);
-        enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> {
+        enhancer.setCallback((MethodInterceptor) (o, method, args, proxy) -> {
             String channel = method.getAnnotation(WSSendTo.class).value();
             log.info("Sending message for channel {}", channel);
+            messagingTemplate.convertAndSend(channel, args);
             return null;
 
         });
+
         return enhancer.create();
     }
 
