@@ -1,19 +1,26 @@
 package org.communis.websocket.tester.bean.utilitys;
 
+import com.google.common.collect.Lists;
 import lombok.extern.log4j.Log4j2;
-import org.communis.websocket.tester.annotations.WSController;
-import org.communis.websocket.tester.annotations.WSSendTo;
+import org.communis.websocket.tester.annotations.WebSocketController;
+import org.communis.websocket.tester.temp.entity.WebSocketHandlerService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
+import org.springframework.cglib.beans.BeanGenerator;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 
 @Log4j2
 @Component
@@ -23,26 +30,37 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+
+
+    List<Class<?>> foundBeans = new ArrayList<>();
+
     @Override
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
-        if(!beanClass.isAnnotationPresent(WSController.class))
+        if (!beanClass.isAnnotationPresent(WebSocketController.class) || !beanClass.isInterface())
             return null;
+
+        Map<Method, List<String>> methodsChannel = new HashMap<>();
+        Method[] methods = beanClass.getMethods();
+
+        Arrays.asList(methods).forEach(method -> methodsChannel.put(method, NameGenerator.generateChannelFromMethod(method)));
 
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(beanClass);
         enhancer.setCallback((MethodInterceptor) (o, method, args, proxy) -> {
-            String channel = method.getAnnotation(WSSendTo.class).value();
-            log.info("Sending message for channel {}", channel);
-            messagingTemplate.convertAndSend(channel, args);
+            methodsChannel.get(method).forEach(channel -> {
+                messagingTemplate.convertAndSend(channel, args);
+                log.info("sending message to channel {}", channel);
+            });
             return null;
 
         });
-
+        foundBeans.add(beanClass);
         return enhancer.create();
     }
 
     @Override
     public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
+
         return true;
 
     }
@@ -54,11 +72,18 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
+        if(!(bean instanceof WebSocketHandlerService))
+            return bean;
+
+        WebSocketHandlerService service = (WebSocketHandlerService) bean;
+        service.setBeans(foundBeans);
+        return service;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         return bean;
     }
+
+
 }

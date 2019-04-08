@@ -1,13 +1,10 @@
 package org.communis.websocket.tester.bean.utilitys;
 
 import lombok.extern.log4j.Log4j2;
-import org.communis.websocket.tester.annotations.WSController;
+import org.communis.websocket.tester.annotations.WebSocketController;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -26,7 +23,7 @@ public class AppImportBeanDefinitionRegistrar implements ImportBeanDefinitionReg
         String pkgName = className.substring(0, pkgNameEnd);
 
         Reflections reflections = new Reflections(pkgName,new TypeAnnotationsScanner(), new SubTypesScanner());
-        Set<Class<?>> controllers = reflections.getTypesAnnotatedWith(WSController.class);
+        Set<Class<?>> controllers = reflections.getTypesAnnotatedWith(WebSocketController.class);
 
         for (Class<?> controller : controllers) {
             if (!controller.isInterface())

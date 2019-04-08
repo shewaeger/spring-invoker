@@ -1,12 +1,14 @@
 package org.communis.websocket.tester.temp.entity;
 
-import org.communis.websocket.tester.annotations.WSController;
-import org.communis.websocket.tester.annotations.WSSendTo;
+import org.communis.websocket.tester.annotations.WebSocketController;
+import org.springframework.messaging.handler.annotation.SendTo;
 
-@WSController
+@WebSocketController
 public interface BrigadeWSController {
 
-    @WSSendTo("/queue/brigade")
+    void sendToQueueBrigadeExit(BrigadeWrapper wrapper);
+
+    @SendTo("/queue/brigade")
     void sendToBrigade(BrigadeWrapper wrapper);
 
 }

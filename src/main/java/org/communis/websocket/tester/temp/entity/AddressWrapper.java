@@ -1,12 +1,12 @@
 package org.communis.websocket.tester.temp.entity;
 
-
 import lombok.Data;
 
 @Data
-public class BrigadeWrapper {
+public class AddressWrapper {
     Long id;
-    String name;
-    AddressWrapper wrapper;
+    String street;
+    Long num;
+    Boolean head;
 
 }
