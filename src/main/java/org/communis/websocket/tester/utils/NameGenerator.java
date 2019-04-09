@@ -1,4 +1,4 @@
-package org.communis.websocket.tester.bean.utilitys;
+package org.communis.websocket.tester.utils;
 
 import org.springframework.messaging.handler.annotation.SendTo;
 

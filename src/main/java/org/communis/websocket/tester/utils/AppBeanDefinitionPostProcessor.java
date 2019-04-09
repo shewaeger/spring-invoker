@@ -1,24 +1,19 @@
-package org.communis.websocket.tester.bean.utilitys;
+package org.communis.websocket.tester.utils;
 
-import com.google.common.collect.Lists;
 import lombok.extern.log4j.Log4j2;
 import org.communis.websocket.tester.annotations.WebSocketController;
-import org.communis.websocket.tester.temp.entity.WebSocketHandlerService;
+import org.communis.websocket.tester.services.WebSocketHandlerService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
-import org.springframework.cglib.beans.BeanGenerator;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ReflectionUtils;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -30,9 +25,6 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-
-
-   Map<Class<?>, String> foundBeans = new HashMap<>();
 
     @Override
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
@@ -54,7 +46,6 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
             return null;
 
         });
-        foundBeans.put(beanClass, beanName);
         return enhancer.create();
     }
 
@@ -72,12 +63,7 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if(!(bean instanceof WebSocketHandlerService))
-            return bean;
-
-        WebSocketHandlerService service = (WebSocketHandlerService) bean;
-        service.setBeans(foundBeans);
-        return service;
+        return bean;
     }
 
     @Override

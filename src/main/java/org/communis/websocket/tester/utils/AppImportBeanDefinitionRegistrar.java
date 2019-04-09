@@ -1,4 +1,4 @@
-package org.communis.websocket.tester.bean.utilitys;
+package org.communis.websocket.tester.utils;
 
 import lombok.extern.log4j.Log4j2;
 import org.communis.websocket.tester.annotations.WebSocketController;

@@ -1,6 +1,6 @@
 package org.communis.websocket.tester.annotations;
 
-import org.communis.websocket.tester.bean.utilitys.AppImportBeanDefinitionRegistrar;
+import org.communis.websocket.tester.utils.AppImportBeanDefinitionRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
