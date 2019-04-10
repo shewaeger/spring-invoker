@@ -2,7 +2,8 @@ package org.communis.websocket.tester.utils;
 
 import lombok.extern.log4j.Log4j2;
 import org.communis.websocket.tester.annotations.WebSocketController;
-import org.communis.websocket.tester.services.WebSocketHandlerService;
+import org.communis.websocket.tester.exceptions.MethodHasInvalidParameters;
+import org.communis.websocket.tester.info.ReflectionMethodInfo;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,29 +32,46 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
         if (!beanClass.isAnnotationPresent(WebSocketController.class) || !beanClass.isInterface())
             return null;
 
-        Map<Method, List<String>> methodsChannel = new HashMap<>();
+        Map<Method, ReflectionMethodInfo> methodInfoMap = new HashMap<>();
+        //Что бы не использовать reflection в лямбде, заранее готовлю всю информацию.
         Method[] methods = beanClass.getMethods();
+        for (Method method : methods) {
+            List<String> queues = NameGenerator.generateChannelFromMethod(method);
+            Boolean hasUser = methodHasUserField(method);
+            if (hasUser == null)
+                throw new MethodHasInvalidParameters(
+                        "Method %s has %d parameters. Method must The method must contain one or two parameters." +
+                                " If the method contains two parameters, the first must be of type %s",
+                        method.getName(), method.getParameterCount(), String.class.getName()
+                );
+            ReflectionMethodInfo methodInfo = new ReflectionMethodInfo(queues, hasUser);
+            methodInfoMap.put(method, methodInfo);
+        }
 
-        Arrays.asList(methods).forEach(method -> methodsChannel.put(method, NameGenerator.generateChannelFromMethod(method)));
 
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(beanClass);
         enhancer.setCallback((MethodInterceptor) (o, method, args, proxy) -> {
-            methodsChannel.get(method).forEach(channel -> {
-                messagingTemplate.convertAndSend(channel, args);
-                log.info("sending message to channel {}", channel);
-            });
-            return null;
+            ReflectionMethodInfo methodInfo = methodInfoMap.get(method);
 
+            if (methodInfo.getForUser()) {
+                for (String queue : methodInfo.getQueues()) {
+                    messagingTemplate.convertAndSendToUser(args[0].toString(), queue, args[1]);
+                }
+            } else {
+                for (String queue : methodInfo.getQueues()) {
+                    messagingTemplate.convertAndSend(queue, args[0]);
+                }
+            }
+            log.debug("Method {} has been invoking", method.getName());
+            return null;
         });
         return enhancer.create();
     }
 
     @Override
     public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
-
         return true;
-
     }
 
     @Override
@@ -69,6 +87,26 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         return bean;
+    }
+
+    //Вернет null если неверное количество параметров.
+    //Параметров может быть один, или два. Если два, то это значит, сообщение предназначено пользователю.
+    //TODO hardcode
+    private Boolean methodHasUserField(Method method) {
+        int parameterCount = method.getParameterCount();
+        if (parameterCount < 1 || parameterCount > 2) {
+            return null;
+        }
+
+        if (parameterCount == 1)
+            return false;
+
+        Class<?>[] parameterTypes = method.getParameterTypes();
+
+        if (parameterTypes[0].equals(String.class))
+            return true;
+
+        return null;
     }
 
 

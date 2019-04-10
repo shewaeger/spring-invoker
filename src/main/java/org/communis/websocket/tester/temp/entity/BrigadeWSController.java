@@ -11,4 +11,6 @@ public interface BrigadeWSController {
     @SendTo("/queue/brigade")
     void sendToBrigade(BrigadeWrapper wrapper);
 
+    void sendToQueueBrigadeTest(String user, BrigadeWrapper wrapper);
+
 }

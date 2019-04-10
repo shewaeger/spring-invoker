@@ -19,7 +19,7 @@ public class NameGenerator {
         if(methodName.startsWith(startsWithString))
             methodName = methodName.substring(startsWithString.length());
 
-        String[] queuePath = methodName.split("(?=\\p{Lu})");
+        String[] queuePath = methodName.split("(?=\\p{Lu})"); //split by upper case characters
 
         for (int i = 0; i < queuePath.length; i++) {
             queuePath[i] = queuePath[i].toLowerCase();

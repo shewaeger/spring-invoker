@@ -8,5 +8,5 @@ public class BrigadeWrapper {
     Long id;
     String name;
     AddressWrapper wrapper;
-
+    TestEnum _enum;
 }

@@ -1,7 +1,7 @@
 package org.communis.websocket.tester.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.communis.websocket.tester.ClassMethodInfo;
+import org.communis.websocket.tester.info.ControllerMethodInfo;
 import org.communis.websocket.tester.annotations.WebSocketController;
 import org.communis.websocket.tester.dto.WebSocketControllerMethodsInfoWrapper;
 import org.communis.websocket.tester.exceptions.IncorrectJsonObject;
@@ -22,7 +22,7 @@ import java.util.*;
 @Service
 public class WebSocketHandlerService {
 
-    private Map<Long, ClassMethodInfo> beans = new HashMap<>();
+    private Map<Long, ControllerMethodInfo> beans = new HashMap<>();
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -43,7 +43,7 @@ public class WebSocketHandlerService {
             Method[] methods = clazz.getMethods();
 
             for (Method method : methods) {
-                this.beans.put(++index[0], new ClassMethodInfo(method, clazz, beanId));
+                this.beans.put(++index[0], new ControllerMethodInfo(method, clazz, beanId));
             }
         });
 
@@ -57,33 +57,40 @@ public class WebSocketHandlerService {
         return retValue;
     }
 
-    public boolean sendMessage(Long id, String jsonMessage) {
+    public Boolean sendMessage(Long id, String jsonMessage, String user) {
 
-        ClassMethodInfo classMethodInfo = beans.get(id);
-        if (classMethodInfo == null)
+        ControllerMethodInfo controllerMethodInfo = beans.get(id);
+        if (controllerMethodInfo == null)
             throw new NotFoundException("Unable to find bean with id %s", id);
 
-        Object bean = applicationContext.getBean(classMethodInfo.getBeanId());
+        Object bean = applicationContext.getBean(controllerMethodInfo.getBeanId());
 
         Object parameter;
 
         try {
-            parameter = objectMapper.readValue(jsonMessage, classMethodInfo.getParameter());
+            parameter = objectMapper.readValue(jsonMessage, controllerMethodInfo.getParameter());
         } catch (IOException e) {
             throw new IncorrectJsonObject(e, "Object %s is incorrect", jsonMessage);
         }
 
         try {
-            classMethodInfo.getMethod().invoke(bean, parameter);
+            if (user == null)
+                controllerMethodInfo.getMethod().invoke(bean, parameter);
+            else
+                controllerMethodInfo.getMethod().invoke(bean, user, parameter);
         } catch (Exception e) {
-            throw new UnableToInvokeMethodException(e, "Unable to invoke method %s", classMethodInfo.getMethod().getName());
+            throw new UnableToInvokeMethodException(e, "Unable to invoke method %s", controllerMethodInfo.getMethod().getName());
         }
 
         return true;
     }
 
-    //Не трогая бины, инфу о них можно получить так:
-    private Map<String, Class<?>> getAllClassesForAnnotation(Class<? extends Annotation> annotation){
+    public Boolean sendMessage(Long id, String jsonMessage) {
+        return sendMessage(id, jsonMessage, null);
+    }
+
+    //Не создавая бины, инфу о них можно получить так:
+    private Map<String, Class<?>> getAllClassesForAnnotation(Class<? extends Annotation> annotation) {
         String[] beanNames = applicationContext.getBeanNamesForAnnotation(annotation);
         Map<String, Class<?>> beanClasses = new HashMap<>();
 
@@ -93,11 +100,11 @@ public class WebSocketHandlerService {
             try {
                 Class<?> clazz = Class.forName(beanDefinition.getBeanClassName());
                 beanClasses.put(beanName, clazz);
-            } catch (ClassNotFoundException ignore) {}
+            } catch (ClassNotFoundException ignore) {
+            }
         }
 
         return beanClasses;
     }
-
 
 }

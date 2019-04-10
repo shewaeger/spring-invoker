@@ -23,4 +23,9 @@ public class WebSocketRestController {
     Boolean sendMessage(@PathVariable Long id, @RequestBody String jsonObject) {
         return service.sendMessage(id, jsonObject);
     }
+
+    @PostMapping("{id}/{user}")
+    Boolean sendMessageForUser(@PathVariable Long id, @PathVariable String user, @RequestBody String jsonObject){
+        return service.sendMessage(id, jsonObject, user);
+    }
 }
