@@ -17,6 +17,8 @@ public class ControllerMethodInfo {
 
     private Class<?> parameter;
 
+    private Boolean isParameterPrimitive;
+
     private Boolean hasUser;
 
     private List<String> channels;
@@ -27,8 +29,21 @@ public class ControllerMethodInfo {
         this.beanId = beanId;
         this.hasUser = method.getParameterCount() > 1;
         this.channels = NameGenerator.generateChannelFromMethod(method);
-
         this.parameter = method.getParameterCount() > 1 ? method.getParameterTypes()[1] : method.getParameterTypes()[0];
+        this.isParameterPrimitive = isClassPrimitive(this.parameter);
+    }
+
+
+    private boolean isClassPrimitive(Class<?> clazz){
+
+        return clazz.isPrimitive() ||
+                clazz.equals(String.class) ||
+                clazz.equals(Long.class) ||
+                clazz.equals(Integer.class) ||
+                clazz.equals(Float.class) ||
+                clazz.equals(Double.class) ||
+                clazz.equals(Boolean.class) /*||
+                clazz.isEnum()*/;
     }
 
 }

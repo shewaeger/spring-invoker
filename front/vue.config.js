@@ -1,6 +1,6 @@
 module.exports = {
     outputDir: '../src/main/resources/static/frontend',
-    indexPath: '../../templates/index.html',
+    indexPath: '../../templates/web-socket-tester.html',
     baseUrl: '/',
     devServer: {
       watchOptions: {

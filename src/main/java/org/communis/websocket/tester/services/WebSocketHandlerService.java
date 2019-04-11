@@ -67,10 +67,15 @@ public class WebSocketHandlerService {
 
         Object parameter;
 
-        try {
-            parameter = objectMapper.readValue(jsonMessage, controllerMethodInfo.getParameter());
-        } catch (IOException e) {
-            throw new IncorrectJsonObject(e, "Object %s is incorrect", jsonMessage);
+        if(controllerMethodInfo.getIsParameterPrimitive()) {
+            parameter = jsonMessage;
+        }
+        else {
+            try {
+                parameter = objectMapper.readValue(jsonMessage, controllerMethodInfo.getParameter());
+            } catch (IOException e) {
+                throw new IncorrectJsonObject(e, "Object %s is incorrect", jsonMessage);
+            }
         }
 
         try {

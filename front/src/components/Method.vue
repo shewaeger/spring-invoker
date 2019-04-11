@@ -1,5 +1,6 @@
 <template>
     <div class="ws-controller">
+        <h3>{{ controller.name }}</h3>
        <v-text-field
             v-model="userValue"
             label="User"
@@ -93,5 +94,7 @@ export default {
 </script>
 
 <style>
-    
+    .ws-controller textarea{
+        font-family: monospace;
+    }
 </style>

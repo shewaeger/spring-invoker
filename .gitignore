@@ -27,3 +27,6 @@ gradle/wrapper
 
 ### VS Code ###
 .vscode/
+
+/src/main/resources/static/frontend/**
+templates
