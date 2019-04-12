@@ -1,8 +1,25 @@
 <template>
-    <div class="group-controller">
+  <div class="group-controller">
+  <v-expansion-panel>
+    <v-expansion-panel-content>
+      <template v-slot:header>
         <h1>{{controllerName}}</h1>
-        <method v-for="controller in propControllers" :key="controller.id" :controller="controller"></method>
-    </div>
+      </template>
+        <v-card>
+          <v-card-actions>
+              <v-expansion-panel>
+                    <v-expansion-panel-content  v-for="controller in propControllers" :key="controller.id" >
+                        <template v-slot:header>
+                            <div>{{controller.name}}</div>
+                        </template>
+                        <method :controller="controller"></method>
+                    </v-expansion-panel-content>
+              </v-expansion-panel>
+          </v-card-actions>
+        </v-card>
+    </v-expansion-panel-content>
+  </v-expansion-panel>
+  </div>
 </template>
 <script>
 import Method from "./Method.vue"
@@ -18,7 +35,13 @@ export default {
 </script>
 
 <style>
+
+.group-controller {
+    border: 1px solid #000;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
 .group-controller h1{
-    margin: 10px 0 40px 0;
+    font-size: 1em;
 }
 </style>

@@ -1,12 +1,17 @@
 <template>
     <div class="ws-controller">
-        <h3>{{ controller.name }}</h3>
-       <v-text-field
+        <div class="description">
+            <h3>Channels:</h3>
+            <ul>
+                <li v-for="(channel, index) in controller.channels" :key="index"> {{channel}}</li>
+            </ul>
+        </div>
+
+        <v-text-field
             v-model="userValue"
             label="User"
             outline
-            v-if="controller.hasUser"
-        >
+            v-if="controller.hasUser">
         </v-text-field>
         <v-textarea
             name="input-7-1"
@@ -62,10 +67,23 @@ export default {
                 case "string":
                     if(scheme.enum){
                         if(scheme.enum[0])
-                            return scheme.enum[0];
-                        return "";
+                            retObject = scheme.enum[0];
+                        else
+                            retObject = "";
                     }
-                    retObject = "string";
+                    else if (scheme.format){
+                        switch(scheme.format){
+                            case "date-time":
+                                retObject = new Date().toString();
+                                break;
+                            default:
+                                retObject = scheme.format
+                                break;
+                        }
+                    }
+                    else {
+                        retObject = "string";
+                    }
                     break;
                 case "number":
                 case "integer":
@@ -95,6 +113,14 @@ export default {
 
 <style>
     .ws-controller textarea{
+        font-family: monospace;
+        min-height: 500px !important;
+    }
+    .ws-controller {
+        padding: 20px 20px 30px;
+    }
+    .description {
+        margin: 10px;
         font-family: monospace;
     }
 </style>

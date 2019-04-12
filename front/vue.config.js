@@ -1,14 +1,14 @@
 module.exports = {
     outputDir: '../src/main/resources/static/frontend',
     indexPath: '../../templates/web-socket-tester.html',
-    baseUrl: '/',
+    publicPath: '/ws/',
     devServer: {
       watchOptions: {
         poll: 1000,
       },
       proxy: {
         '^/web-socket-api': {
-          target: 'http://localhost:8080',
+          target: 'http://localhost:8080/ws',
         },
       },
       overlay: {

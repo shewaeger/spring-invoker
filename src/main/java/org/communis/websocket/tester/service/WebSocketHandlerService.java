@@ -1,12 +1,12 @@
-package org.communis.websocket.tester.services;
+package org.communis.websocket.tester.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.communis.websocket.tester.info.ControllerMethodInfo;
-import org.communis.websocket.tester.annotations.WebSocketController;
+import org.communis.websocket.tester.annotation.WebSocketController;
 import org.communis.websocket.tester.dto.WebSocketControllerMethodsInfoWrapper;
-import org.communis.websocket.tester.exceptions.IncorrectJsonObject;
-import org.communis.websocket.tester.exceptions.NotFoundException;
-import org.communis.websocket.tester.exceptions.UnableToInvokeMethodException;
+import org.communis.websocket.tester.exception.IncorrectJsonObject;
+import org.communis.websocket.tester.exception.NotFoundException;
+import org.communis.websocket.tester.exception.UnableToInvokeMethodException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

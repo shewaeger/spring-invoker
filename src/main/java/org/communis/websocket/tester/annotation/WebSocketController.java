@@ -1,4 +1,4 @@
-package org.communis.websocket.tester.annotations;
+package org.communis.websocket.tester.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

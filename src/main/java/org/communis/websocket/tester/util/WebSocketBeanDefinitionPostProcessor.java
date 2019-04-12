@@ -1,8 +1,8 @@
-package org.communis.websocket.tester.utils;
+package org.communis.websocket.tester.util;
 
 import lombok.extern.log4j.Log4j2;
-import org.communis.websocket.tester.annotations.WebSocketController;
-import org.communis.websocket.tester.exceptions.MethodHasInvalidParameters;
+import org.communis.websocket.tester.annotation.WebSocketController;
+import org.communis.websocket.tester.exception.MethodHasInvalidParameters;
 import org.communis.websocket.tester.info.ReflectionMethodInfo;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
@@ -20,7 +20,7 @@ import java.util.*;
 
 @Log4j2
 @Component
-public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPostProcessor {
+public class WebSocketBeanDefinitionPostProcessor implements InstantiationAwareBeanPostProcessor {
 
     @Lazy
     @Autowired
@@ -31,7 +31,7 @@ public class AppBeanDefinitionPostProcessor implements InstantiationAwareBeanPos
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
         if (!beanClass.isAnnotationPresent(WebSocketController.class) || !beanClass.isInterface())
             return null;
-
+        log.info("Configuring bean: {}", beanName);
         Map<Method, ReflectionMethodInfo> methodInfoMap = new HashMap<>();
         //Что бы не использовать reflection в лямбде, заранее готовлю всю информацию.
         Method[] methods = beanClass.getMethods();

@@ -1,6 +1,7 @@
-package org.communis.websocket.tester.annotations;
+package org.communis.websocket.tester.annotation;
 
-import org.communis.websocket.tester.utils.AppImportBeanDefinitionRegistrar;
+import org.communis.websocket.tester.configuration.ScanConfiguration;
+import org.communis.websocket.tester.util.WebSocketBeanDefinitionRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -10,6 +11,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import(AppImportBeanDefinitionRegistrar.class)
+@Import({WebSocketBeanDefinitionRegistrar.class, ScanConfiguration.class})
 public @interface EnableWebSocketControllers {
 }

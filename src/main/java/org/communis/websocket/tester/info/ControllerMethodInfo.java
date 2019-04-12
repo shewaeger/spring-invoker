@@ -1,7 +1,7 @@
 package org.communis.websocket.tester.info;
 
 import lombok.Data;
-import org.communis.websocket.tester.utils.NameGenerator;
+import org.communis.websocket.tester.util.NameGenerator;
 
 import java.lang.reflect.Method;
 import java.util.List;

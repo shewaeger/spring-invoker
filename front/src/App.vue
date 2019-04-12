@@ -9,13 +9,7 @@
 </template> 
 
 <script>
-    import axios from 'axios'
-    import 'vuetify/dist/vuetify.min.css'
     import GroupController from "./components/GroupController.vue"
-    import __ from "lodash"
-    import Vuetify from "vuetify"
-    import Vue from "vue";
-    Vue.use(Vuetify);
     export default {
       components: {
         GroupController
@@ -25,9 +19,9 @@
         errors: []
       }),
       created() {
-        axios.get("web-socket-api")
+        this.$axios.get("web-socket-api")
         .then( response => {
-          this.groupControllers = __.groupBy( response.data, (item) => {
+          this.groupControllers = this.$_.groupBy( response.data, (item) => {
             var t = item.ownerName.split(".");
             return t[t.length - 1];
           });

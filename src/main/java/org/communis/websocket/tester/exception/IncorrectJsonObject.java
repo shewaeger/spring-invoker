@@ -1,4 +1,4 @@
-package org.communis.websocket.tester.exceptions;
+package org.communis.websocket.tester.exception;
 
 public class IncorrectJsonObject extends RuntimeException {
 
