@@ -25,8 +25,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import __ from 'lodash'
 export default {
     props: ["controller"],
     data: () => ({
@@ -50,7 +48,7 @@ export default {
     },
     methods: {
         sendMessage(){
-            axios.post(this.apiHref , JSON.parse(this.jsonData))
+            this.axios.post(this.apiHref , JSON.parse(this.jsonData))
             .then((response) => {
                 // eslint-disable-next-line
                 console.log(response);
@@ -99,7 +97,7 @@ export default {
                     if(scheme.$ref && this.generatedObjects[scheme.$ref])
                         return this.generatedObjects[scheme.$ref];
                     var properties = scheme.properties;
-                    __.forEach(properties, (value, key) => {
+                    this.$_.forEach(properties, (value, key) => {
                         
                         retObject[key] = this.getObjectFromScheme(value);
                     })

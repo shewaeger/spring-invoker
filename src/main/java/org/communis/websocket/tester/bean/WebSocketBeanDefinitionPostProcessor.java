@@ -2,7 +2,6 @@ package org.communis.websocket.tester.bean;
 
 import lombok.extern.log4j.Log4j2;
 import org.communis.websocket.tester.annotation.WebSocketController;
-import org.communis.websocket.tester.exception.MethodHasInvalidParametersException;
 import org.communis.websocket.tester.info.ReflectionMethodInfo;
 import org.communis.websocket.tester.util.NameGenerator;
 import org.springframework.beans.BeansException;
@@ -39,13 +38,7 @@ public class WebSocketBeanDefinitionPostProcessor implements InstantiationAwareB
         Method[] methods = beanClass.getMethods();
         for (Method method : methods) {
             List<String> queues = NameGenerator.generateChannelFromMethod(method);
-            Boolean hasUser = methodHasUserField(method);
-            if (hasUser == null)
-                throw new MethodHasInvalidParametersException(
-                        "Method %s has %d parameters. Method must contain one or two parameters." +
-                                " If the method contains two parameters, the first must be of type %s",
-                        method.getName(), method.getParameterCount(), String.class.getName()
-                );
+            Boolean hasUser = checkUserField(method);
             ReflectionMethodInfo methodInfo = new ReflectionMethodInfo(queues, hasUser);
             methodInfoMap.put(method, methodInfo);
         }
@@ -94,21 +87,9 @@ public class WebSocketBeanDefinitionPostProcessor implements InstantiationAwareB
     //Вернет null если неверное количество параметров.
     //Параметров может быть один, или два. Если два, то это значит, сообщение предназначено пользователю.
     //TODO hardcode
-    private Boolean methodHasUserField(Method method) {
+    private Boolean checkUserField(Method method) {
         int parameterCount = method.getParameterCount();
-        if (parameterCount < 1 || parameterCount > 2) {
-            return null;
-        }
-
-        if (parameterCount == 1)
-            return false;
-
-        Class<?>[] parameterTypes = method.getParameterTypes();
-
-        if (parameterTypes[0].equals(String.class))
-            return true;
-
-        return null;
+        return parameterCount != 1;
     }
 
 

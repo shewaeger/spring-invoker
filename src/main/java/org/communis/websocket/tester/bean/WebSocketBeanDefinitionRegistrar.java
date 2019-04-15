@@ -5,6 +5,7 @@ import org.communis.websocket.tester.annotation.WebSocketController;
 import org.communis.websocket.tester.configuration.WebSocketMvcConfig;
 import org.communis.websocket.tester.controller.WebSocketRestController;
 import org.communis.websocket.tester.controller.WebSocketWebController;
+import org.communis.websocket.tester.exception.MethodHasInvalidParametersException;
 import org.communis.websocket.tester.service.WebSocketHandlerService;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,10 +43,35 @@ public class WebSocketBeanDefinitionRegistrar implements ImportBeanDefinitionReg
     }
 
     private void registerBeans(BeanDefinitionRegistry registry, Class<?> clazz){
+
+        validateClass(clazz);
+
         GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition();
         genericBeanDefinition.setBeanClass(clazz);
         if(!registry.isBeanNameInUse(clazz.getName())) {
             registry.registerBeanDefinition(clazz.getName(), genericBeanDefinition);
+        }
+    }
+
+    private void validateClass(Class<?> clazz){
+        Method[] methods = clazz.getMethods();
+
+        for (Method method : methods) {
+            int parameterCount = method.getParameterCount();
+            if (parameterCount == 1 || parameterCount == 2) {
+                if (parameterCount == 1)
+                    continue; //don`t throw exception
+                Class<?>[] parameterTypes = method.getParameterTypes();
+
+                if (parameterTypes[0].equals(String.class))
+                    continue; //don`t throw exception
+            }
+
+            throw new MethodHasInvalidParametersException(
+                    "Method %s has %d parameters. Method must contain one or two parameters." +
+                            " If the method contains two parameters, the first must be of type %s",
+                    method.getName(), method.getParameterCount(), String.class.getName()
+            );
         }
 
     }
