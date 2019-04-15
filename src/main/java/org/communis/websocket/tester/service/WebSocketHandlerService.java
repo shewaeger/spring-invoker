@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.communis.websocket.tester.info.ControllerMethodInfo;
 import org.communis.websocket.tester.annotation.WebSocketController;
 import org.communis.websocket.tester.dto.WebSocketControllerMethodsInfoWrapper;
-import org.communis.websocket.tester.exception.IncorrectJsonObject;
+import org.communis.websocket.tester.exception.IncorrectJsonObjectException;
 import org.communis.websocket.tester.exception.NotFoundException;
 import org.communis.websocket.tester.exception.UnableToInvokeMethodException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +74,7 @@ public class WebSocketHandlerService {
             try {
                 parameter = objectMapper.readValue(jsonMessage, controllerMethodInfo.getParameter());
             } catch (IOException e) {
-                throw new IncorrectJsonObject(e, "Object %s is incorrect", jsonMessage);
+                throw new IncorrectJsonObjectException(e, "Object %s is incorrect", jsonMessage);
             }
         }
 
