@@ -7,9 +7,7 @@ module.exports = {
         poll: 1000,
       },
       proxy: {
-        '^/web-socket-api': {
-          target: 'http://localhost:8080/ws',
-        },
+        
       },
       overlay: {
         warnings: true,

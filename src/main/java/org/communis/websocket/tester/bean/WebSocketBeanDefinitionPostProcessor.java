@@ -1,9 +1,10 @@
-package org.communis.websocket.tester.util;
+package org.communis.websocket.tester.bean;
 
 import lombok.extern.log4j.Log4j2;
 import org.communis.websocket.tester.annotation.WebSocketController;
 import org.communis.websocket.tester.exception.MethodHasInvalidParametersException;
 import org.communis.websocket.tester.info.ReflectionMethodInfo;
+import org.communis.websocket.tester.util.NameGenerator;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +34,15 @@ public class WebSocketBeanDefinitionPostProcessor implements InstantiationAwareB
             return null;
         log.info("Configuring bean: {}", beanName);
         Map<Method, ReflectionMethodInfo> methodInfoMap = new HashMap<>();
-        //Что бы не использовать reflection в лямбде, заранее готовлю всю информацию.
+
+        //In order not to use reflection in lambda, all information is prepared in advance.
         Method[] methods = beanClass.getMethods();
         for (Method method : methods) {
             List<String> queues = NameGenerator.generateChannelFromMethod(method);
             Boolean hasUser = methodHasUserField(method);
             if (hasUser == null)
                 throw new MethodHasInvalidParametersException(
-                        "Method %s has %d parameters. Method must The method must contain one or two parameters." +
+                        "Method %s has %d parameters. Method must contain one or two parameters." +
                                 " If the method contains two parameters, the first must be of type %s",
                         method.getName(), method.getParameterCount(), String.class.getName()
                 );

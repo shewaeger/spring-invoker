@@ -42,9 +42,9 @@ export default {
     computed: {
         apiHref: function(){
             if(this.controller.hasUser)
-                return "web-socket-api/" + this.controller.id + "/" + this.userValue;
+                return "/ws/web-socket-api/" + this.controller.id + "/" + this.userValue;
             else
-                return "web-socket-api/" + this.controller.id;
+                return "/ws/web-socket-api/" + this.controller.id;
             
         }
     },

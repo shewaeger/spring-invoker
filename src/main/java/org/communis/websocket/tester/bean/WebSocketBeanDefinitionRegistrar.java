@@ -1,4 +1,4 @@
-package org.communis.websocket.tester.util;
+package org.communis.websocket.tester.bean;
 
 import lombok.extern.log4j.Log4j2;
 import org.communis.websocket.tester.annotation.WebSocketController;
@@ -22,14 +22,6 @@ import java.util.Set;
 @Log4j2
 public class WebSocketBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
 
-    private static final List<Class<?>> pkgBeans = new ArrayList<>(Arrays.asList(
-            WebSocketBeanDefinitionPostProcessor.class,
-            WebSocketRestController.class,
-            WebSocketHandlerService.class,
-            WebSocketWebController.class,
-            WebSocketMvcConfig.class
-    ));
-
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
 
@@ -46,9 +38,6 @@ public class WebSocketBeanDefinitionRegistrar implements ImportBeanDefinitionReg
             log.info("Found WSControllers {}", controller.getName());
             registerBeans(registry, controller);
         }
-
-        //pkgBeans.forEach(c -> registerBeans(registry, c));
-
     }
 
     private void registerBeans(BeanDefinitionRegistry registry, Class<?> clazz){

@@ -39,6 +39,7 @@ public class WebSocketHandlerService {
         Map<String, Class<?>> beans = getAllClassesForAnnotation(WebSocketController.class);
 
         final Long[] index = {0L};
+
         beans.forEach((beanId, clazz) -> {
             Method[] methods = clazz.getMethods();
 
@@ -94,7 +95,7 @@ public class WebSocketHandlerService {
         return sendMessage(id, jsonMessage, null);
     }
 
-    //Не создавая бины, инфу о них можно получить так:
+    //Get information about beans without creating them
     private Map<String, Class<?>> getAllClassesForAnnotation(Class<? extends Annotation> annotation) {
         String[] beanNames = applicationContext.getBeanNamesForAnnotation(annotation);
         Map<String, Class<?>> beanClasses = new HashMap<>();

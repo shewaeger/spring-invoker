@@ -19,7 +19,7 @@
         errors: []
       }),
       created() {
-        this.$axios.get("web-socket-api")
+        this.$axios.get("/ws/web-socket-api")
         .then( response => {
           this.groupControllers = this.$_.groupBy( response.data, (item) => {
             var t = item.ownerName.split(".");
