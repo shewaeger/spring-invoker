@@ -29,7 +29,7 @@ dependencies {
 Если нужно отправить сообщение пользователю, то первый параметр должен быть ```java.lang.String```, а второй - объект, который должен отправиться.
 
 Пример:
-```
+```java
 @WebSocketController
 public interface UserWSController {
 
