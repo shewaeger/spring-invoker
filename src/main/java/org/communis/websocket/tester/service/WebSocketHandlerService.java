@@ -68,10 +68,9 @@ public class WebSocketHandlerService {
 
         Object parameter;
 
-        if(controllerMethodInfo.getIsParameterPrimitive()) {
+        if (controllerMethodInfo.getIsParameterPrimitive()) {
             parameter = jsonMessage;
-        }
-        else {
+        } else {
             try {
                 parameter = objectMapper.readValue(jsonMessage, controllerMethodInfo.getParameter());
             } catch (IOException e) {

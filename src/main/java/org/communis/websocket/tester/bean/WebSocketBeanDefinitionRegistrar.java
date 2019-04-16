@@ -2,11 +2,8 @@ package org.communis.websocket.tester.bean;
 
 import lombok.extern.log4j.Log4j2;
 import org.communis.websocket.tester.annotation.WebSocketController;
-import org.communis.websocket.tester.configuration.WebSocketMvcConfig;
-import org.communis.websocket.tester.controller.WebSocketRestController;
-import org.communis.websocket.tester.controller.WebSocketWebController;
 import org.communis.websocket.tester.exception.MethodHasInvalidParametersException;
-import org.communis.websocket.tester.service.WebSocketHandlerService;
+import org.communis.websocket.tester.util.BeanUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -16,9 +13,6 @@ import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 @Log4j2
@@ -57,21 +51,43 @@ public class WebSocketBeanDefinitionRegistrar implements ImportBeanDefinitionReg
         Method[] methods = clazz.getMethods();
 
         for (Method method : methods) {
-            int parameterCount = method.getParameterCount();
-            if (parameterCount == 1 || parameterCount == 2) {
-                if (parameterCount == 1)
-                    continue; //don`t throw exception
-                Class<?>[] parameterTypes = method.getParameterTypes();
+            // check method name
+            BeanUtils.generateChannelFromMethod(method);
 
-                if (parameterTypes[0].equals(String.class))
-                    continue; //don`t throw exception
+            // check method parameters
+            int parameterCount = method.getParameterCount();
+            Class<?> parameterType = null;
+            Class<?> userField = null;
+            if(parameterCount == 1) {
+                parameterType = method.getParameterTypes()[0];
+            }
+            else if(parameterCount == 2) {
+                Class<?>[] parameterTypes = method.getParameterTypes();
+                parameterType = parameterTypes[1];
+                userField = parameterTypes[0];
+            }
+            else{
+                throw new MethodHasInvalidParametersException(
+                        "Method %s has %d parameters. Method must contain one or two parameters." +
+                                " If the method contains two parameters, the first must be of type java.lang.String.",
+                        method.getName(), method.getParameterCount()
+                );
             }
 
-            throw new MethodHasInvalidParametersException(
-                    "Method %s has %d parameters. Method must contain one or two parameters." +
-                            " If the method contains two parameters, the first must be of type %s",
-                    method.getName(), method.getParameterCount(), String.class.getName()
-            );
+            if(userField != null && !userField.equals(String.class)){
+                throw new MethodHasInvalidParametersException(
+                        "Method %s must have a first argument as java.lang.String.",
+                        method.getName()
+                );
+            }
+
+            if(BeanUtils.isClassPrimitive(parameterType) && !parameterType.equals(String.class)){
+                throw new MethodHasInvalidParametersException(
+                        "method %s should not have primitive types as %s",
+                        method.getName(), parameterType.getName()
+                );
+            }
+
         }
 
     }

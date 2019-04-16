@@ -3,7 +3,7 @@ package org.communis.websocket.tester.bean;
 import lombok.extern.log4j.Log4j2;
 import org.communis.websocket.tester.annotation.WebSocketController;
 import org.communis.websocket.tester.info.ReflectionMethodInfo;
-import org.communis.websocket.tester.util.NameGenerator;
+import org.communis.websocket.tester.util.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class WebSocketBeanDefinitionPostProcessor implements InstantiationAwareB
         //In order not to use reflection in lambda, all information is prepared in advance.
         Method[] methods = beanClass.getMethods();
         for (Method method : methods) {
-            List<String> queues = NameGenerator.generateChannelFromMethod(method);
+            List<String> queues = BeanUtils.generateChannelFromMethod(method);
             Boolean hasUser = checkUserField(method);
             ReflectionMethodInfo methodInfo = new ReflectionMethodInfo(queues, hasUser);
             methodInfoMap.put(method, methodInfo);

@@ -18,20 +18,36 @@
             :label="controller.name"
             v-model="jsonData"
             outline
+            auto-grow
         >
         </v-textarea>
         <v-btn @click="sendMessage" color="#050">Send</v-btn>
+        <div class="serverResponse" v-if=" response && response.length != 0">
+            <h3>Resopnse:</h3>
+            <v-textarea
+                name="input-7-1"
+                :label="controller.name"
+                v-model="response"
+                outline
+                :readonly="true"
+                auto-grow
+                :error="errorResponse"
+            ></v-textarea>
+        </div>
     </div>
 </template>
 
 <script>
+
 export default {
     props: ["controller"],
     data: () => ({
         jsonData: "",
         userValue: "",
         tmp: {},
-        generatedObjects: {}
+        generatedObjects: {},
+        response: "",
+        errorResponse: false
     }),
     created(){
         this.jsonData = JSON.stringify(this.getObjectFromScheme(this.controller.parameter), null, 4);
@@ -48,14 +64,17 @@ export default {
     },
     methods: {
         sendMessage(){
-            this.axios.post(this.apiHref , JSON.parse(this.jsonData))
+            var request = JSON.parse(this.jsonData);
+            if(!request)
+                request = this.jsonData;
+            this.$axios.post(this.apiHref, request)
             .then((response) => {
-                // eslint-disable-next-line
-                console.log(response);
+                this.errorResponse = false;
+                this.response = JSON.stringify(response.data, null, 4);
             })
-            .catch(error => {
-                // eslint-disable-next-line
-                console.error(error.response.data.exception)
+            .catch(e => {
+                this.errorResponse = true;
+                this.response = JSON.stringify(e.response.data, null, 4);
             })
         },
 

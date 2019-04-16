@@ -12,7 +12,7 @@
                         <template v-slot:header>
                             <div>{{controller.name}}</div>
                         </template>
-                        <method :controller="controller"></method>
+                        <method :controller="controller" @methodSend="(message) => $emit('methodSend', message)"></method>
                     </v-expansion-panel-content>
               </v-expansion-panel>
           </v-card-actions>

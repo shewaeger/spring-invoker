@@ -5,6 +5,20 @@
       :propControllers="groupController"
       :controllerName="key"
       :key="index"></group-controller>
+    <v-dialog v-model="dialog.show" persistent >
+        <v-card>
+          <v-card-title
+            class="headline red lighten-2"
+            primary-title
+          >
+            Error
+          </v-card-title>
+  
+          <v-card-text class="headline">
+            {{dialog.message}}
+          </v-card-text>
+        </v-card>
+    </v-dialog>
   </div>
 </template> 
 
@@ -12,11 +26,14 @@
     import GroupController from "./components/GroupController.vue"
     export default {
       components: {
-        GroupController
+        GroupController        
       },
       data: () => ({
         groupControllers: [],
-        errors: []
+        dialog: {
+          show: false,
+          message: ""
+        }
       }),
       created() {
         this.$axios.get("/ws/web-socket-api")
@@ -27,10 +44,13 @@
           });
         })
         .catch(e => {
-          this.errors.push(e);
+          // eslint-disable-next-line
+          console.error(e);
+
+          this.dialog.message = "Unable to connect to server"
+          this.dialog.show = true;
         })
-      },
-      
+      }      
     }
 
 
