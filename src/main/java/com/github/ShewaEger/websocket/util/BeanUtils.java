@@ -73,5 +73,6 @@ public class BeanUtils {
                 clazz.equals(Double.class) ||
                 clazz.equals(Boolean.class) /*||
                 clazz.isEnum()*/;
+                // check
     }
 }
