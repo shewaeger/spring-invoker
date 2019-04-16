@@ -56,7 +56,7 @@ public class WebSocketBeanDefinitionRegistrar implements ImportBeanDefinitionReg
 
             // check method parameters
             int parameterCount = method.getParameterCount();
-            Class<?> parameterType = null;
+            Class<?> parameterType;
             Class<?> userField = null;
             if(parameterCount == 1) {
                 parameterType = method.getParameterTypes()[0];

@@ -37,7 +37,8 @@ public class BeanUtils {
             );
         }
 
-        String[] queuePath = methodName.split("(?=\\p{Lu})"); //split by upper case characters
+        //split by upper case characters
+        String[] queuePath = methodName.split("(?=\\p{Lu})");
 
         for (int i = 0; i < queuePath.length; i++) {
             queuePath[i] = queuePath[i].toLowerCase();
