@@ -1,7 +1,26 @@
 # Web socket tester
 Библиотека инкапсулирует в себе вызовы класса ```SimpMessagingTemplate``` таких, как ```convertAndSend(...)``` и ```convertAndSendToUser(...)```. Так же библиотека содержит утилиту для тестирования отправки сообщений в котроллеры, с аннотацией ```@WebSocketController```.
 
-Что бы подключить библиотеку нужно указать аннотацию ```@EnableWebSocketControllers```.
+### Подключение библиотеки в проект
+
+#### Gradle
+```java
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+    ...
+
+dependencies {
+    compile 'com.github.shewaeger:websocket:0.0.2'
+}
+
+```
+### Активация библиотеки
+Что бы подключить библиотеку нужно указать аннотацию ```@EnableWebSocketControllers``` и сконфигурировать stomp в проекте. [Пример](https://spring.io/guides/gs/messaging-stomp-websocket/).
 
 Для объявления контроллера используется интерфейс. Над интерфейсом должна стоять аннотация ```@WebSocketController```. Для того, что бы указать канналы, над методом нужно поставить аннотацию ```@SendTo```, которая принимает коллекцию каналов. Библиотека так же может генерировать канал из имени метода. Для этого метод должен начинаться с ```sendTo```.
 
