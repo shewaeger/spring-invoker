@@ -1,9 +1,9 @@
-package com.github.ShewaEger.websocket.bean;
+package com.github.shewaeger.websocket.bean;
 
 import lombok.extern.log4j.Log4j2;
-import com.github.ShewaEger.websocket.annotation.WebSocketController;
-import com.github.ShewaEger.websocket.info.ReflectionMethodInfo;
-import com.github.ShewaEger.websocket.util.BeanUtils;
+import com.github.shewaeger.websocket.annotation.WebSocketController;
+import com.github.shewaeger.websocket.info.ReflectionMethodInfo;
+import com.github.shewaeger.websocket.util.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.annotation.Autowired;

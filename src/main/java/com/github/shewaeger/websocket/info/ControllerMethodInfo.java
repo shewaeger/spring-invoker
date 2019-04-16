@@ -1,6 +1,6 @@
-package com.github.ShewaEger.websocket.info;
+package com.github.shewaeger.websocket.info;
 
-import com.github.ShewaEger.websocket.util.BeanUtils;
+import com.github.shewaeger.websocket.util.BeanUtils;
 import lombok.Data;
 
 import java.lang.reflect.Method;

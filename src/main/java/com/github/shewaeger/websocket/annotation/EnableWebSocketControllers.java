@@ -1,7 +1,7 @@
-package com.github.ShewaEger.websocket.annotation;
+package com.github.shewaeger.websocket.annotation;
 
-import com.github.ShewaEger.websocket.bean.WebSocketBeanDefinitionRegistrar;
-import com.github.ShewaEger.websocket.configuration.ScanConfiguration;
+import com.github.shewaeger.websocket.bean.WebSocketBeanDefinitionRegistrar;
+import com.github.shewaeger.websocket.configuration.ScanConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;

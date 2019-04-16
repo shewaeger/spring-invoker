@@ -1,9 +1,9 @@
-package com.github.ShewaEger.websocket.bean;
+package com.github.shewaeger.websocket.bean;
 
 import lombok.extern.log4j.Log4j2;
-import com.github.ShewaEger.websocket.annotation.WebSocketController;
-import com.github.ShewaEger.websocket.exception.MethodHasInvalidParametersException;
-import com.github.ShewaEger.websocket.util.BeanUtils;
+import com.github.shewaeger.websocket.annotation.WebSocketController;
+import com.github.shewaeger.websocket.exception.MethodHasInvalidParametersException;
+import com.github.shewaeger.websocket.util.BeanUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;

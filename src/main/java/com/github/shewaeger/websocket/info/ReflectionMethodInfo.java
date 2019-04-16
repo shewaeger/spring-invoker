@@ -1,4 +1,4 @@
-package com.github.ShewaEger.websocket.info;
+package com.github.shewaeger.websocket.info;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

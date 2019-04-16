@@ -1,11 +1,11 @@
-package com.github.ShewaEger.websocket.dto;
+package com.github.shewaeger.websocket.dto;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import lombok.Data;
-import com.github.ShewaEger.websocket.info.ControllerMethodInfo;
+import com.github.shewaeger.websocket.info.ControllerMethodInfo;
 
 import java.util.List;
 

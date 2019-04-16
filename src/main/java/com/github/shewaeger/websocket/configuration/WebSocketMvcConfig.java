@@ -1,4 +1,4 @@
-package com.github.ShewaEger.websocket.configuration;
+package com.github.shewaeger.websocket.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

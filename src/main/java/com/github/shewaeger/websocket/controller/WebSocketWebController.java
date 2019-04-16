@@ -1,4 +1,4 @@
-package com.github.ShewaEger.websocket.controller;
+package com.github.shewaeger.websocket.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
