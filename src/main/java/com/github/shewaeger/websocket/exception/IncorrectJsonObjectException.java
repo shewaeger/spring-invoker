@@ -6,4 +6,7 @@ public class IncorrectJsonObjectException extends RuntimeException {
         super(String.format(message, args), parent);
     }
 
+    public IncorrectJsonObjectException(String message, Object...args){
+        super(String.format(message, args));
+    }
 }

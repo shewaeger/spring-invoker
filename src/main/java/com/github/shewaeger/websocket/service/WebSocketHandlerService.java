@@ -19,7 +19,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 
-@Service
+//@Service
 public class WebSocketHandlerService {
 
     private Map<Long, ControllerMethodInfo> beans = new HashMap<>();
@@ -100,6 +100,7 @@ public class WebSocketHandlerService {
         Map<String, Class<?>> beanClasses = new HashMap<>();
 
         for (String beanName : beanNames) {
+
             BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
 
             try {

@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import({WebSocketBeanDefinitionRegistrar.class, ScanConfiguration.class})
+@Import({/*WebSocketBeanDefinitionRegistrar.class,*/ ScanConfiguration.class})
 public @interface EnableWebSocketControllers {
 }

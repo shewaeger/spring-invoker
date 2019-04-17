@@ -51,8 +51,6 @@ public class WebSocketBeanDefinitionRegistrar implements ImportBeanDefinitionReg
         Method[] methods = clazz.getMethods();
 
         for (Method method : methods) {
-            // check method name
-            BeanUtils.generateChannelFromMethod(method);
 
             // check method parameters
             int parameterCount = method.getParameterCount();
