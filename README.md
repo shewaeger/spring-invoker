@@ -19,6 +19,14 @@ dependencies {
 }
 
 ```
+Если в проекте используется spring < 1.5.20 в зависимостях указать:
+
+```java
+dependencies {
+    compile group: 'com.google.guava', name: 'guava', version: '20.0'
+}
+```
+
 ### Активация библиотеки
 Что бы подключить библиотеку нужно указать аннотацию ```@EnableWebSocketControllers``` и сконфигурировать stomp в проекте. [Пример](https://spring.io/guides/gs/messaging-stomp-websocket/).
 
