@@ -18,15 +18,15 @@ repositories {
 }
 
 dependencies {
-	compile 'org.springframework.boot:spring-boot-starter:1.5.20.RELEASE'
-	compile 'org.springframework.boot:spring-boot-starter-log4j2:1.5.20.RELEASE'
-	compile 'org.springframework.boot:spring-boot-starter-web:1.5.20.RELEASE'
+	compile 'org.springframework.boot:spring-boot-starter:1.5.15.RELEASE'
+	compile 'org.springframework.boot:spring-boot-starter-log4j2:1.5.15.RELEASE'
+	compile 'org.springframework.boot:spring-boot-starter-web:1.5.15.RELEASE'
 	compile 'org.projectlombok:lombok:1.18.4'
 	compile 'org.springframework:spring-websocket:4.3.23.RELEASE'
 	compile 'org.springframework:spring-messaging:4.3.23.RELEASE'
 	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jsonSchema', version: '2.9.8'
-	compile group: 'org.reflections', name: 'reflections', version: '0.9.11'
+	compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
 
-	testCompile 'org.springframework.boot:spring-boot-starter-test:1.5.20.RELEASE'
+	testCompile 'org.springframework.boot:spring-boot-starter-test:1.5.15.RELEASE'
 
 }
