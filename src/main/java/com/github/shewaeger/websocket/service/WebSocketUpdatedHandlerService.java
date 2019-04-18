@@ -1,22 +1,15 @@
 package com.github.shewaeger.websocket.service;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.core.TreeNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.github.shewaeger.websocket.annotation.InvokedClass;
 import com.github.shewaeger.websocket.annotation.SendMethod;
-import com.github.shewaeger.websocket.annotation.WebSocketController;
 import com.github.shewaeger.websocket.dto.ControllerMethodInfoWrapper;
-import com.github.shewaeger.websocket.dto.ControllerMethodInvokeWrapper;
-import com.github.shewaeger.websocket.dto.ParameterWrapper;
 import com.github.shewaeger.websocket.exception.IncorrectJsonObjectException;
 import com.github.shewaeger.websocket.exception.UnableToInvokeMethodException;
-import com.github.shewaeger.websocket.info.UpdatedControllerMethodInfo;
-import lombok.var;
+import com.github.shewaeger.websocket.info.ControllerMethodInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -27,6 +20,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,19 +35,19 @@ public class WebSocketUpdatedHandlerService {
     @Autowired
     private ObjectMapper mapper;
 
-    private Map<Long, UpdatedControllerMethodInfo> controllers = new HashMap<>();
+    private Map<Long, ControllerMethodInfo> controllers = new HashMap<>();
 
     @PostConstruct
     public void init() {
-        Map<String, Class<?>> beans = getAllClassesForAnnotation(WebSocketController.class);
-
+        Map<String, Class<?>> beans = getAllClassesForAnnotation(InvokedClass.class);
+        final Long[] i = {0L};
         beans.forEach((name, bean) -> {
             Method[] methods = bean.getMethods();
-            final Long[] i = {0L};
+
             for (Method method : methods) {
                 if (!method.isAnnotationPresent(SendMethod.class))
                     continue;
-                controllers.put(++i[0], new UpdatedControllerMethodInfo(method, bean, name));
+                controllers.put(++i[0], new ControllerMethodInfo(method, bean, name));
             }
         });
     }
@@ -68,7 +62,7 @@ public class WebSocketUpdatedHandlerService {
     }
 
     public Object invokeMethod(Long id, String rawArgs) {
-        UpdatedControllerMethodInfo methodInfo = controllers.get(id);
+        ControllerMethodInfo methodInfo = controllers.get(id);
         Method method = methodInfo.getMethod();
         String beanId = methodInfo.getBeanId();
         Object bean = beanFactory.getBean(beanId);
@@ -85,23 +79,44 @@ public class WebSocketUpdatedHandlerService {
     }
 
     private Object[] getParametersFromRest(Method method, String args) {
-        List<Object> returned = new ArrayList<>();
-        int parameterCount = method.getParameterCount();
-        Class<?>[] parameterTypes = method.getParameterTypes();
-
-        JavaType type = mapper.getTypeFactory().constructType(new TypeReference<List<ParameterWrapper>>() {});
-
-        List<ParameterWrapper> arguments;
         try {
-            arguments = mapper.readValue(args, type);
-        } catch (IOException e) {
-            throw new IncorrectJsonObjectException(e, "Object %s is incorrect", args);
-        }
+            Parameter[] parameters = method.getParameters();
+            int parameterCount = method.getParameterCount();
+            List<Object> returned = new ArrayList<>();
+            JsonNode treeNode = mapper.readTree(args);/*.traverse().readValueAsTree();*/
 
-        for (ParameterWrapper argument : arguments) {
-            //argument.
+            if (!treeNode.isArray()) {
+                throw new IncorrectJsonObjectException("Root node must be array");
+            }
+
+            int arraySize = treeNode.size();
+
+            if (arraySize < parameterCount) {
+                throw new IncorrectJsonObjectException("Method %s takes %d parameters");
+            }
+
+            if (arraySize > parameterCount && !parameters[parameterCount - 1].getType().isArray())
+                throw new IncorrectJsonObjectException("Method %s takes %d parameters");
+
+            int j = 0;
+            for (int i = 0; i < arraySize; i++) {
+                TreeNode parameter = treeNode.get(i);
+                Class<?> clazz = parameters[j].getType();
+                JsonParser parser = parameter.traverse();
+
+                Object o = mapper.readValue(parser, clazz);
+
+                returned.add(o);
+
+                if (j < parameterCount - 1)
+                    j++;
+            }
+
+            return returned.toArray();
         }
-        return null;
+        catch (IOException e){
+            throw new IncorrectJsonObjectException("Key parameters contains incorrect objects");
+        }
     }
 
     //Get information about beans without creating them

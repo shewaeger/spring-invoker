@@ -1,26 +1,18 @@
 <template>
     <div class="ws-controller">
-        <div class="description">
-            <h3>Channels:</h3>
-            <ul>
-                <li v-for="(channel, index) in controller.channels" :key="index"> {{channel}}</li>
-            </ul>
+        <div class="description" v-if="controller.description != ''">
+            <h3>Description:</h3>
+            <p>{{controller.description}}</p>
         </div>
-
-        <v-text-field
-            v-model="userValue"
-            label="User"
-            outline
-            v-if="controller.hasUser">
-        </v-text-field>
         <v-textarea
-            name="input-7-1"
-            :label="controller.name"
-            v-model="jsonData"
-            outline
-            auto-grow
-        >
-        </v-textarea>
+        name="input-7-1"
+        :label="paramNames[key]"
+        outline
+        auto-grow
+        v-for="(parameter, key) in parameters" 
+            :key="key"
+        v-model="parameters[key]"
+    ></v-textarea>
         <v-btn @click="sendMessage" color="#050">Send</v-btn>
         <div class="serverResponse" v-if=" response && response.length != 0">
             <h3>Resopnse:</h3>
@@ -38,46 +30,47 @@
 </template>
 
 <script>
-
 export default {
+    components: {
+    },
     props: ["controller"],
     data: () => ({
-        jsonData: "",
-        userValue: "",
-        tmp: {},
-        generatedObjects: {},
         response: "",
-        errorResponse: false
+        errorResponse: false,
+        parameters: [],
+        paramNames: [],
+        generatedObjects: []
+        
     }),
     created(){
-        this.jsonData = JSON.stringify(this.getObjectFromScheme(this.controller.parameter), null, 4);
+        this.controller.parameters.forEach( el => {
+                this.parameters.push(JSON.stringify(this.getObjectFromScheme(el.schema), null, 4));
+                this.paramNames.push(el.name);
+            }
+        );
+        
     },
-
     computed: {
         apiHref: function(){
-            if(this.controller.hasUser)
-                return "/ws/web-socket-api/" + this.controller.id + "/" + this.userValue;
-            else
-                return "/ws/web-socket-api/" + this.controller.id;
-            
+            return "/ws/web-socket-api/" + this.controller.id;
         }
     },
+
     methods: {
         sendMessage(){
-            var request = JSON.parse(this.jsonData);
-            if(!request)
-                request = this.jsonData;
-            this.$axios.post(this.apiHref, request)
-            .then((response) => {
-                this.errorResponse = false;
-                this.response = JSON.stringify(response.data, null, 4);
-            })
-            .catch(e => {
-                this.errorResponse = true;
-                this.response = JSON.stringify(e.response.data, null, 4);
-            })
+            
+            var jsonRequest = '[' + this.parameters.join(",") + ']'
+            var payload = JSON.parse(jsonRequest);
+            this.$axios.post(this.apiHref, payload)
+                .then((response) => {
+                    this.errorResponse = false;
+                    this.response = JSON.stringify(response.data, null, 4);
+                })
+                .catch(e => {
+                    this.errorResponse = true;
+                    this.response = JSON.stringify(e.response.data, null, 4);
+                })
         },
-
         getObjectFromScheme(scheme){
             var retObject = {};
             switch(scheme.type){
@@ -131,7 +124,7 @@ export default {
 <style>
     .ws-controller textarea{
         font-family: monospace;
-        min-height: 500px !important;
+        /* min-height: 500px !important; */
     }
     .ws-controller {
         padding: 20px 20px 30px;

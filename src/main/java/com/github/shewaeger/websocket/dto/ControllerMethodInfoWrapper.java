@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
-import com.github.shewaeger.websocket.info.UpdatedControllerMethodInfo;
+import com.github.shewaeger.websocket.info.ControllerMethodInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.DefaultParameterNameDiscoverer;
+import org.springframework.core.ParameterNameDiscoverer;
 
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,19 +20,26 @@ import java.util.List;
 @Log4j2
 public class ControllerMethodInfoWrapper {
 
-    List<JsonSchema> parameters = new ArrayList<>();
+    private List<ParameterWrapper> parameters = new ArrayList<>();
 
-    String name;
+    private String name;
 
-    String idOwner;
+    private String idOwner;
 
-    Long id;
+    private Long id;
 
-    public ControllerMethodInfoWrapper(Long id, UpdatedControllerMethodInfo methodInfo, ObjectMapper mapper){
+    private String description;
+
+    public ControllerMethodInfoWrapper(Long id, ControllerMethodInfo methodInfo, ObjectMapper mapper) {
+        ParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
         JsonSchemaGenerator generator = new JsonSchemaGenerator(mapper);
-        for (Class<?> parameter : methodInfo.getParameters()) {
+        String[] parameterNames = discoverer.getParameterNames(methodInfo.getMethod());
+        Parameter[] parameters = methodInfo.getMethod().getParameters();
+        for (int i = 0; i < parameters.length; i++) {
             try {
-                this.parameters.add(generator.generateSchema(parameter));
+                this.parameters.add(
+                        new ParameterWrapper(parameterNames[i], generator.generateSchema(parameters[i].getType()))
+                );
             } catch (JsonMappingException e) {
                 log.warn("Unable to create method info: {0}", e);
             }
@@ -37,6 +47,7 @@ public class ControllerMethodInfoWrapper {
         this.id = id;
         this.name = methodInfo.getMethod().getName();
         this.idOwner = methodInfo.getOwner().getName();
+        this.description = methodInfo.getDescription();
     }
 
 }

@@ -39,7 +39,7 @@
         this.$axios.get("/ws/web-socket-api")
         .then( response => {
           this.groupControllers = this.$_.groupBy( response.data, (item) => {
-            var t = item.ownerName.split(".");
+            var t = item.idOwner.split(".");
             return t[t.length - 1];
           });
         })
