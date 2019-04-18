@@ -31,7 +31,6 @@ dependencies {
 	compile 'org.springframework:spring-websocket:4.3.23.RELEASE'
 	compile 'org.springframework:spring-messaging:4.3.23.RELEASE'
 	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jsonSchema', version: '2.9.8'
-	compile group: 'org.reflections', name: 'reflections', version: '0.9.11'
 
 	testCompile 'org.springframework.boot:spring-boot-starter-test:1.5.20.RELEASE'
 
