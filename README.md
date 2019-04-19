@@ -1,5 +1,7 @@
 # Web socket tester
-Библиотека инкапсулирует в себе вызовы класса ```SimpMessagingTemplate``` таких, как ```convertAndSend(...)``` и ```convertAndSendToUser(...)```. Так же библиотека содержит утилиту для тестирования отправки сообщений в котроллеры, с аннотацией ```@WebSocketController```.
+[![](https://jitpack.io/v/shewaeger/websocket.svg)](https://jitpack.io/#shewaeger/websocket)
+
+Утилита для вызова методов бинов. Позволяет делать вызов методов из веб-интерфейса. 
 
 ### Подключение библиотеки в проект
 
@@ -15,7 +17,7 @@ allprojects {
     ...
 
 dependencies {
-    compile 'com.github.shewaeger:websocket:0.0.2'
+    compile 'com.github.shewaeger:websocket:0.0.4'
 }
 
 ```
