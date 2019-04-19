@@ -22,7 +22,7 @@ public class WebSocketMvcConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/ws/favicon.ico")
                 .addResourceLocations("classpath:/static/frontend/favicon.ico");
 
-        registry.addResourceHandler("/web-socket-tester.html")
-                .addResourceLocations("classpath:/templates/web-socket-tester.html");
+        registry.addResourceHandler("/spring-invoker.html")
+                .addResourceLocations("classpath:/templates/spring-invoker.html");
     }
 }

@@ -1,6 +1,6 @@
 module.exports = {
     outputDir: '../src/main/resources/static/frontend',
-    indexPath: '../../templates/web-socket-tester.html',
+    indexPath: '../../templates/spring-invoker.html',
     publicPath: '/ws/',
     devServer: {
       watchOptions: {
