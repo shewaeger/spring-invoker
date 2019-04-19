@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'com.github.shewaeger'
-version = '1.0.0-RELEASE'
+version = '1.0.3'
 sourceCompatibility = '1.8'
 
 configurations {
