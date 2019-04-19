@@ -47,4 +47,4 @@ public class InvokedService {
 
 ```
 
-Утилита для тестирования доступна по адресу http://example.com/web-socket-tester.html
+Утилита для тестирования доступна по адресу http://example.com/spring-invoker.html
