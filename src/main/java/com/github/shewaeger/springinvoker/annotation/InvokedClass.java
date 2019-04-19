@@ -1,4 +1,4 @@
-package com.github.shewaeger.websocket.annotation;
+package com.github.shewaeger.springinvoker.annotation;
 
 import org.springframework.stereotype.Component;
 

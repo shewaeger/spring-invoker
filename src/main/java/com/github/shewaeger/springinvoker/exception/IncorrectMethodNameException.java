@@ -1,4 +1,4 @@
-package com.github.shewaeger.websocket.exception;
+package com.github.shewaeger.springinvoker.exception;
 
 public class IncorrectMethodNameException extends RuntimeException {
     public IncorrectMethodNameException(String msg, Object... args){

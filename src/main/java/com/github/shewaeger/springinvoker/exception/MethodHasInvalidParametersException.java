@@ -1,4 +1,4 @@
-package com.github.shewaeger.websocket.exception;
+package com.github.shewaeger.springinvoker.exception;
 
 import org.springframework.beans.BeansException;
 

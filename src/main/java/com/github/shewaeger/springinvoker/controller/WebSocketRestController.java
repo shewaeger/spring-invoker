@@ -1,7 +1,7 @@
-package com.github.shewaeger.websocket.controller;
+package com.github.shewaeger.springinvoker.controller;
 
-import com.github.shewaeger.websocket.dto.ControllerMethodInfoWrapper;
-import com.github.shewaeger.websocket.service.WebSocketUpdatedHandlerService;
+import com.github.shewaeger.springinvoker.dto.ControllerMethodInfoWrapper;
+import com.github.shewaeger.springinvoker.service.WebSocketUpdatedHandlerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

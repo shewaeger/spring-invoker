@@ -1,15 +1,15 @@
-package com.github.shewaeger.websocket.service;
+package com.github.shewaeger.springinvoker.service;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.shewaeger.websocket.annotation.InvokedClass;
-import com.github.shewaeger.websocket.annotation.SendMethod;
-import com.github.shewaeger.websocket.dto.ControllerMethodInfoWrapper;
-import com.github.shewaeger.websocket.exception.IncorrectJsonObjectException;
-import com.github.shewaeger.websocket.exception.UnableToInvokeMethodException;
-import com.github.shewaeger.websocket.info.ControllerMethodInfo;
+import com.github.shewaeger.springinvoker.annotation.InvokedClass;
+import com.github.shewaeger.springinvoker.annotation.SendMethod;
+import com.github.shewaeger.springinvoker.dto.ControllerMethodInfoWrapper;
+import com.github.shewaeger.springinvoker.exception.IncorrectJsonObjectException;
+import com.github.shewaeger.springinvoker.exception.UnableToInvokeMethodException;
+import com.github.shewaeger.springinvoker.info.ControllerMethodInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

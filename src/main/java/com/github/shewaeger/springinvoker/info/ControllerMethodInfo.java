@@ -1,6 +1,6 @@
-package com.github.shewaeger.websocket.info;
+package com.github.shewaeger.springinvoker.info;
 
-import com.github.shewaeger.websocket.annotation.SendMethod;
+import com.github.shewaeger.springinvoker.annotation.SendMethod;
 import lombok.Data;
 
 import java.lang.reflect.Method;

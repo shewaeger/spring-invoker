@@ -1,4 +1,4 @@
-package com.github.shewaeger.websocket.dto;
+package com.github.shewaeger.springinvoker.dto;
 
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import lombok.Data;

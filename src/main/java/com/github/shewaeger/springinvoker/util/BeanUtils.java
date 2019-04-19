@@ -1,7 +1,7 @@
-package com.github.shewaeger.websocket.util;
+package com.github.shewaeger.springinvoker.util;
 
-import com.github.shewaeger.websocket.exception.IncorrectMethodNameException;
-import com.github.shewaeger.websocket.exception.MethodHasChannelsDuplicatesException;
+import com.github.shewaeger.springinvoker.exception.IncorrectMethodNameException;
+import com.github.shewaeger.springinvoker.exception.MethodHasChannelsDuplicatesException;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import java.lang.reflect.Method;

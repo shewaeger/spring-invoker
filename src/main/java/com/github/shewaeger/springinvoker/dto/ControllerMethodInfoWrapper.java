@@ -1,10 +1,9 @@
-package com.github.shewaeger.websocket.dto;
+package com.github.shewaeger.springinvoker.dto;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
-import com.github.shewaeger.websocket.info.ControllerMethodInfo;
+import com.github.shewaeger.springinvoker.info.ControllerMethodInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
